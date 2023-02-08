@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 
 import axios from "axios";
 
-const EditMovieForm = (props) => {
+const AddMovieForm = (props) => {
   const { push } = useHistory();
   const { id } = useParams();
 
-  const { setClick } = props;
+  const { setMovies, setClick } = props;
   const [movie, setMovie] = useState({
     title: "",
     director: "",
@@ -20,7 +20,7 @@ const EditMovieForm = (props) => {
   useEffect(() => {
     // retrieve the current film from the API and save to the local state
     axios
-      .get(`http://localhost:9000/api/movies/${id}`)
+      .get(`http://localhost:9000/api/movies`)
       .then((res) => {
         setMovie(res.data);
       })
@@ -37,11 +37,12 @@ const EditMovieForm = (props) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     axios
-      .put(`http://localhost:9000/api/movies/${id}`, movie)
+      .post("http://localhost:9000/api/movies", movie)
       .then((res) => {
+        setMovie(res.data);
         setClick(Math.random());
         //setMovies(movie.map((item) => (item.id === id ? res.data : item)));
-        push(`/movies/${movie.id}`);
+        push(`/movies`);
       })
       .catch((err) => {
         console.log(err);
@@ -55,7 +56,7 @@ const EditMovieForm = (props) => {
       <form onSubmit={handleSubmit}>
         <div className="p-5 pb-3 border-b border-zinc-200">
           <h4 className="text-xl font-bold">
-            Düzenleniyor <strong>{movie.title}</strong>
+            <strong>{movie.title}</strong>
           </h4>
         </div>
 
@@ -122,4 +123,4 @@ const EditMovieForm = (props) => {
   );
 };
 
-export default EditMovieForm;
+export default AddMovieForm;
